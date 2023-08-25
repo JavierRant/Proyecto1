@@ -45,7 +45,8 @@ def main():
     cv2.createTrackbar(denoised_trackbar, window_name, 0, 50, on_trackbar)
     cv2.createTrackbar(distance_trackbar, window_name, 0, 100, on_trackbar)
 
-
+    #print(cont_object)
+    #ya esta chequeado que son todos distintos
     while True:
         ret, frame = cap.read()
         frame = cv2.flip(frame, 1)
@@ -75,32 +76,34 @@ def main():
 
             #lista con los valores del 0 al 1 de que tan cerca esta mi contorno con el contorno de las formas geométricas
             #el matchShapes() me da el valor del 0 al 1 que tan parecida es mi contorno con el contorno comparativo
+            distance_circle = cv2.matchShapes(cont_object[0][0][1], c, cv2.CONTOURS_MATCH_I1,0)
+            distance_triangle = cv2.matchShapes(c, cont_object[1][0][1], cv2.CONTOURS_MATCH_I1,0)
+            distance_square = cv2.matchShapes(c, cont_object[2][0][1], cv2.CONTOURS_MATCH_I1,0)
+            distance_star = cv2.matchShapes(cont_object[3][0][1], c, cv2.CONTOURS_MATCH_I1,0)
+            distance_rectangle = cv2.matchShapes(cont_object[4][0][1], c, cv2.CONTOURS_MATCH_I1,0)
+            distance_pentagon = cv2.matchShapes(cont_object[5][0][1], c, cv2.CONTOURS_MATCH_I1,0)
 
-            distance_circle = cv2.matchShapes(cont_object[0][0][0], c, cv2.CONTOURS_MATCH_I1, 0.0)
-            distance_triangle = cv2.matchShapes(cont_object[1][0][0], c, cv2.CONTOURS_MATCH_I1, 0.0)
-            distance_square = cv2.matchShapes(cont_object[2][0][0], c, cv2.CONTOURS_MATCH_I1, 0.0)
-            distance_star = cv2.matchShapes(cont_object[3][0][0], c, cv2.CONTOURS_MATCH_I1, 0.0)
-            distance_rectangle = cv2.matchShapes(cont_object[4][0][0], c, cv2.CONTOURS_MATCH_I1, 0.0)
-            distance_pentagon = cv2.matchShapes(cont_object[5][0][0], c, cv2.CONTOURS_MATCH_I1, 0.0)
+            #cuanto mas chiquito el numero mas parecidos son
 
             distances = [distance_circle, distance_triangle, distance_square, distance_star, distance_rectangle, distance_pentagon]
-
             # circle, triangle, square, star, rectangle, pentagon
-
+            #     0,         1,      2,    3,         4,        5
             if max(distances) <= 0.10:
                 cv2.putText(frame, "Unknown", (x, y), cv2.FONT_HERSHEY_COMPLEX, 0.5, color_red)
-            elif max(distances)*100  <= distance_val:
-                if distances.index(max(distances)) == 0:
-                    cv2.putText(frame, "Circle", (x, y), cv2.FONT_HERSHEY_COMPLEX, 0.5, color_green)
-                elif distances.index(max(distances)) == 1 :
+            elif min(distances)*100 <= distance_val:
+                if distances.index(min(distances)) == 1:
                     cv2.putText(frame, "Triangle", (x, y), cv2.FONT_HERSHEY_COMPLEX, 0.5, color_green)
-                elif distances.index(max(distances)) == 2:
+                elif distances.index(min(distances)) == 0:
+                    cv2.putText(frame, "Circle", (x, y), cv2.FONT_HERSHEY_COMPLEX, 0.5, color_green)
+                elif distances.index(min(distances)) == 1:
+                    cv2.putText(frame, "Triangle", (x, y), cv2.FONT_HERSHEY_COMPLEX, 0.5, color_green)
+                elif distances.index(min(distances)) == 2:
                     cv2.putText(frame, "Square", (x, y), cv2.FONT_HERSHEY_COMPLEX, 0.5, color_green)
-                elif distances.index(max(distances)) == 3 :
+                elif distances.index(min(distances)) == 3:
                     cv2.putText(frame, "Star", (x, y), cv2.FONT_HERSHEY_COMPLEX, 0.5, color_green)
-                elif distances.index(max(distances)) == 4 :
+                elif distances.index(min(distances)) == 4:
                     cv2.putText(frame, "Rectangle", (x, y), cv2.FONT_HERSHEY_COMPLEX, 0.5, color_green)
-                elif distances.index(max(distances)) == 5 :
+                elif distances.index(min(distances)) == 5:
                     cv2.putText(frame, "Pentagon", (x, y), cv2.FONT_HERSHEY_COMPLEX, 0.5, color_green)
                 else:
                     cv2.putText(frame, "Unknown", (x, y), cv2.FONT_HERSHEY_COMPLEX, 0.5, color_red)
