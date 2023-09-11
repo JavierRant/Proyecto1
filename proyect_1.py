@@ -16,7 +16,7 @@ def main():
     trackbar_name = "Threshold"
     denoised_trackbar = "Denoised"
     distance_trackbar = "Distance"
-    #solo hago un trackbar, en lugar de hacer un trackbar para cada formar
+    #solo hago un trackbar, en lugar de hacer un trackbar para cada forma
     color_green = (0, 255, 0)
     color_red = (0, 0, 255)
     cv2.namedWindow(window_name)
